@@ -5,6 +5,19 @@ Versionado: `MAYOR.MENOR.PARCHE`.
 
 ---
 
+## [1.1.1] - 2026-06-30
+
+### Corregido
+
+- **ci.yml**: nombre de usuario Docker Hub corregido de `csrocha` a `csrocha75`
+  (causaba `insufficient_scope: authorization failed` al intentar pushear).
+- **Dockerfile** stage `test`: `httpx` reemplazado por `httpx2` (Starlette 1.3+
+  depreca `httpx` con `TestClient`).
+- **.dockerignore**: `tests/` removido para que el stage `test` pueda copiarlos
+  en el build context.
+
+---
+
 ## [1.1.0] - 2026-06-30
 
 ### Cambiado
