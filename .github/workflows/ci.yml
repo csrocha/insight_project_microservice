@@ -17,8 +17,8 @@ jobs:
       - uses: actions/checkout@v4
 
       # Build locally first so we can run tests against the exact image that will be pushed
-      - name: Build image
-        run: docker build -t ${{ env.IMAGE }}:ci-test .
+      - name: Build test image
+        run: docker build --target test -t ${{ env.IMAGE }}:ci-test .
 
       - name: Run tests inside container
         run: docker run --rm ${{ env.IMAGE }}:ci-test pytest tests/ -v
@@ -40,6 +40,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          target: prod
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |

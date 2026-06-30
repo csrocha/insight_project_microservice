@@ -1,6 +1,5 @@
-# ── Stage 1: Ruby + TJ3 ───────────────────────────────────────────────────────
-# ruby:3.2-slim (Debian Bookworm) gives us a stable Ruby runtime for TaskJuggler.
-FROM ruby:3.2-slim
+# ── Stage: production ─────────────────────────────────────────────────────────
+FROM ruby:3.2-slim AS prod
 
 # Install TaskJuggler gem (tj3 CLI)
 RUN gem install taskjuggler --no-document
@@ -28,3 +27,8 @@ EXPOSE 8080
 # PORT env var is honoured by platforms that inject it (e.g. Cloud Run, Railway).
 # Defaults to 8080 so plain `docker run` works without extra flags.
 CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}"]
+
+# ── Stage: test (not pushed to registry) ──────────────────────────────────────
+FROM prod AS test
+RUN pip install --no-cache-dir pytest httpx
+COPY tests/ tests/

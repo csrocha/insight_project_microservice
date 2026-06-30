@@ -5,6 +5,17 @@ Versionado: `MAYOR.MENOR.PARCHE`.
 
 ---
 
+## [1.0.1] - 2026-06-30
+
+### Corregido
+
+- **Dockerfile**: agregado stage `test` (extiende `prod`) que instala `pytest` + `httpx`
+  y copia `tests/` — el stage de producción no incluye dependencias de test.
+- **ci.yml**: `docker build --target test` para la etapa de tests; `target: prod` en
+  `build-push-action` para que la imagen publicada no lleve dependencias de test.
+
+---
+
 ## [1.0.0] - 2026-06-30
 
 ### Prompt
