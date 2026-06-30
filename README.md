@@ -59,8 +59,8 @@ pytest tests/ -v
 ## Building the image
 
 ```bash
-docker build -t insight-tj3-ms .
-docker run -p 8080:8080 insight-tj3-ms
+docker build -t csrocha/tj3-ms .
+docker run -p 8080:8080 csrocha/tj3-ms
 ```
 
 ## Deployment
