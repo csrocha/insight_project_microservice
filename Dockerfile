@@ -30,5 +30,5 @@ CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}"]
 
 # ── Stage: test (not pushed to registry) ──────────────────────────────────────
 FROM prod AS test
-RUN pip install --no-cache-dir pytest httpx
+RUN pip install --no-cache-dir pytest httpx2
 COPY tests/ tests/
