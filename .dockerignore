@@ -3,7 +3,6 @@
 __pycache__
 *.pyc
 *.pyo
-tests/
 requirements-dev.txt
 README.md
 .env*
