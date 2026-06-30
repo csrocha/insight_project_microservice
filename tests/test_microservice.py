@@ -49,7 +49,7 @@ task t2 "Task Two" {
   depends !t1
 }
 
-taskreport "DebugCSV" {
+taskreport "schedule_plan" {
   formats csv
   columns id, bsi, name, start, end, effort, duration, resources, criticalness
   scenarios plan
@@ -59,19 +59,19 @@ taskreport "DebugCSV" {
 INVALID_TJP = "this is not valid taskjuggler syntax at all"
 
 
-def test_schedule_valid_tjp_returns_csv():
+def test_schedule_valid_tjp_returns_csv_files():
     resp = client.post("/schedule", json={"tjp_content": MINIMAL_TJP})
     assert resp.status_code == 200
     data = resp.json()
-    assert "csv" in data
-    assert len(data["csv"]) > 0
+    assert "csv_files" in data
+    assert len(data["csv_files"]) > 0
 
 
 def test_schedule_csv_contains_tasks():
     resp = client.post("/schedule", json={"tjp_content": MINIMAL_TJP})
     assert resp.status_code == 200
-    csv = resp.json()["csv"]
-    assert "t1" in csv or "Task One" in csv
+    all_csv = "\n".join(resp.json()["csv_files"].values())
+    assert "t1" in all_csv or "Task One" in all_csv
 
 
 def test_schedule_invalid_tjp_returns_422():

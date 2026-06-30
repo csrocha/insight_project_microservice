@@ -5,6 +5,23 @@ Versionado: `MAYOR.MENOR.PARCHE`.
 
 ---
 
+## [1.1.0] - 2026-06-30
+
+### Cambiado
+
+- **`POST /schedule` — respuesta** (`ScheduleResponse`): el campo `csv: str` (contenido
+  de un único `DebugCSV.csv`) fue reemplazado por `csv_files: dict[str, str]`, un mapa
+  `basename_del_archivo → contenido_csv`.  
+  Esto permite que un mismo TJP con múltiples bloques `taskreport` (p. ej.
+  `schedule_baseline`, `schedule_withia`) devuelva todos los CSVs en una sola llamada,
+  facilitando la integración con `insight_project` donde cada escenario genera su propio
+  reporte.
+- **Tests**: `MINIMAL_TJP` usa `taskreport "schedule_plan"` en lugar de `"DebugCSV"`;
+  los asserts apuntan a `csv_files` en lugar de `csv`.
+- **README**: documentación de la respuesta actualizada para reflejar `csv_files`.
+
+---
+
 ## [1.0.1] - 2026-06-30
 
 ### Corregido

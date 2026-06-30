@@ -19,7 +19,7 @@ logger = logging.getLogger("uvicorn.error")
 app = FastAPI(
     title="TJ3 Microservice",
     description="TaskJuggler 3 scheduling microservice for Odoo insight_project",
-    version="1.0.0",
+    version="1.1.0",
 )
 
 
@@ -31,7 +31,7 @@ class ScheduleRequest(BaseModel):
 
 
 class ScheduleResponse(BaseModel):
-    csv: str = Field(..., description="Content of the DebugCSV.csv report")
+    csv_files: dict = Field(..., description="Map of filename → CSV content for each taskreport")
     stdout: str
     stderr: str
 
@@ -91,9 +91,10 @@ def schedule(req: ScheduleRequest):
         if result.returncode != 0:
             logger.warning("tj3 stderr: %s", result.stderr[:500])
 
-        # TJ3 writes CSV files to the output dir (or a project-named subdirectory)
-        csv_files = glob.glob(os.path.join(tmpdir, "**", "*.csv"), recursive=True)
-        if not csv_files:
+        # TJ3 writes CSV files to the output dir (or a project-named subdirectory).
+        # Collect all of them; Odoo maps each file back to its scenario.
+        found = glob.glob(os.path.join(tmpdir, "**", "*.csv"), recursive=True)
+        if not found:
             raise HTTPException(
                 status_code=422,
                 detail={
@@ -103,11 +104,14 @@ def schedule(req: ScheduleRequest):
                 },
             )
 
-        with open(csv_files[0], "r", encoding="utf-8") as f:
-            csv_content = f.read()
+        csv_files = {}
+        for path in found:
+            filename = os.path.basename(path)
+            with open(path, "r", encoding="utf-8") as f:
+                csv_files[filename] = f.read()
 
         return ScheduleResponse(
-            csv=csv_content,
+            csv_files=csv_files,
             stdout=result.stdout,
             stderr=result.stderr,
         )

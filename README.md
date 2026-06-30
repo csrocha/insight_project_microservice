@@ -24,11 +24,18 @@ project scheduling. Used by the Odoo addon
 **Response:**
 ```json
 {
-  "csv": "<DebugCSV.csv content>",
+  "csv_files": {
+    "schedule_baseline.csv": "<CSV content>",
+    "schedule_withia.csv":   "<CSV content>"
+  },
   "stdout": "<tj3 stdout>",
   "stderr": "<tj3 stderr>"
 }
 ```
+
+Each key in `csv_files` is the basename of a CSV file produced by tj3.
+When using `insight_project`, each `taskreport` block is named `schedule_{scenario_id}`,
+so the keys map 1-to-1 with project scenarios.
 
 **Error codes:**
 - `408` — tj3 timed out
