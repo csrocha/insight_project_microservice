@@ -5,6 +5,23 @@ Versionado: `MAYOR.MENOR.PARCHE`.
 
 ---
 
+## [1.2.0] - 2026-07-02
+
+### Agregado
+
+- **`POST /schedule` — request** (`ScheduleRequest`): nuevo campo opcional
+  `include_files: dict[str, str]` (mapa `filename → contenido`). Los archivos
+  se escriben junto al `.tjp` en el directorio temporal antes de invocar `tj3`,
+  permitiendo resolver directivas `include` hacia `.tji` u otros archivos
+  referenciados por el proyecto.
+
+### Cambiado
+
+- **docker-compose.yml**: el servicio se conecta a la red externa `fop_net`
+  (bridge) para poder comunicarse con otros contenedores del stack `fop-odoo`.
+
+---
+
 ## [1.1.1] - 2026-06-30
 
 ### Corregido

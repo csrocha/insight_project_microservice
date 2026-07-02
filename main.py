@@ -27,6 +27,10 @@ app = FastAPI(
 
 class ScheduleRequest(BaseModel):
     tjp_content: str = Field(..., description="Full content of the .tjp project file")
+    include_files: dict = Field(
+        default_factory=dict,
+        description="Map of filename → content for .tji and other include files",
+    )
     timeout: int = Field(120, ge=10, le=600, description="Max seconds to wait for tj3")
 
 
@@ -73,6 +77,15 @@ def schedule(req: ScheduleRequest):
         tjp_path = os.path.join(tmpdir, "project.tjp")
         with open(tjp_path, "w", encoding="utf-8") as f:
             f.write(req.tjp_content)
+
+        # Write include files (.tji and others) to the same directory so TJ3
+        # can resolve relative `include` directives.
+        for filename, content in req.include_files.items():
+            safe_name = os.path.basename(filename)
+            if not safe_name:
+                continue
+            with open(os.path.join(tmpdir, safe_name), "w", encoding="utf-8") as f:
+                f.write(content)
 
         try:
             result = subprocess.run(
